@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tickroll/TickRoll.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,23 +62,35 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          TextButton(
+              onPressed: () {
+                //バチバチに眠いので寝ます。あしたはここからjankenアプリを作ります。
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TickRoll()),
+                );
+              },
+              child: Text('TickRoll')),
+        ],
       ),
       body: Center(
-          child: ListView.builder(
-        itemCount: TickDataList.length,
-        itemBuilder: (context, index) {
-          return SwitchListTile(
-            title: Text(TickDataList[index].title),
-            value: TickDataList[index].value,
-            subtitle: Text(TickDataList[index].detail),
-            onChanged: (bool newValue) {
-              setState(() {
-                TickDataList[index].value = newValue;
-              });
-            },
-          );
-        },
-      )),
+        child: ListView.builder(
+          itemCount: TickDataList.length,
+          itemBuilder: (context, index) {
+            return SwitchListTile(
+              title: Text(TickDataList[index].title),
+              value: TickDataList[index].value,
+              subtitle: Text(TickDataList[index].detail),
+              onChanged: (bool newValue) {
+                setState(() {
+                  TickDataList[index].value = newValue;
+                });
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
