@@ -34,6 +34,11 @@ class _TickRoll extends State<TickRoll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text('sample'),
+        actions: [],
+      ),
       body: Center(
           child: ListView.builder(
         itemCount: TickDataList.length,

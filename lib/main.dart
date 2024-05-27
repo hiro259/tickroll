@@ -22,14 +22,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TickData {
+class TickTitle {
   String title;
-  bool value;
   String detail;
 
-  TickData({
+  TickTitle({
     required this.title,
-    required this.value,
     required this.detail,
   });
 }
@@ -44,16 +42,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<TickData> TickDataList = [];
+  List<TickTitle> TickTitleList = [];
+
+  _addTickTile() {
+    //実際の空データの追加
+    TickTitleList.add(TickTitle(title: "", detail: ""));
+
+    //Title用Textfiledの文字列変更用のcontrollerの追加
+    _titleControllers
+        .add(TextEditingController(text: TickTitleList.last.title));
+    //detail用Textfiledの文字列変更用のcontrollerの追加
+    _detailControllers
+        .add(TextEditingController(text: TickTitleList.last.detail));
+  }
 
   _MyHomePageState() {
     print('MyHomePageState Start');
-    TickDataList.add(
-        TickData(title: '水を飲む', value: false, detail: '水分補給は大事だよ！'));
-    TickDataList.add(
-        TickData(title: '布団をたたむ', value: false, detail: '邪魔だからね！'));
-    TickDataList.add(
-        TickData(title: '大葉に水をやる', value: false, detail: '枯れちゃうよ'));
+    TickTitleList.add(TickTitle(title: '朝リスト', detail: '起きてやること'));
+    TickTitleList.add(TickTitle(title: '昼リスト', detail: 'ランチ後にやること'));
+    TickTitleList.add(TickTitle(title: '夜リスト', detail: '寝る前にやること'));
+  }
+
+  final _titleControllers = <TextEditingController>[];
+  final _detailControllers = <TextEditingController>[];
+
+  @override
+  void initState() {
+    super.initState();
+    // TextEditingControllerの初期化
+    for (final item in TickTitleList) {
+      _titleControllers.add(TextEditingController(text: item.title));
+      _detailControllers.add(TextEditingController(text: item.detail));
+    }
   }
 
   @override
@@ -65,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           TextButton(
               onPressed: () {
-                //バチバチに眠いので寝ます。あしたはここからjankenアプリを作ります。
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => TickRoll()),
@@ -75,22 +94,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child: ListView.builder(
-          itemCount: TickDataList.length,
-          itemBuilder: (context, index) {
-            return SwitchListTile(
-              title: Text(TickDataList[index].title),
-              value: TickDataList[index].value,
-              subtitle: Text(TickDataList[index].detail),
-              onChanged: (bool newValue) {
-                setState(() {
-                  TickDataList[index].value = newValue;
-                });
+          child: ListView.builder(
+        itemCount: TickTitleList.length,
+        itemBuilder: (context, index) {
+          return Card(
+              child: ListTile(
+            title: TextField(
+              controller: _titleControllers[index],
+              decoration: InputDecoration(labelText: 'Title'),
+              onChanged: (value) {
+                TickTitleList[index].title = value;
               },
-            );
+            ),
+            subtitle: TextField(
+              controller: _detailControllers[index],
+              decoration: InputDecoration(labelText: 'detail'),
+              onChanged: (value) {
+                TickTitleList[index].detail = value;
+              },
+            ),
+          ));
+        },
+      )),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _addTickTile();
+            setState(() {});
           },
-        ),
-      ),
+          tooltip: 'Increment',
+          child: const Icon(Icons.add)),
     );
   }
 }
