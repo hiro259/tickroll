@@ -54,6 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //detail用Textfiledの文字列変更用のcontrollerの追加
     _detailControllers
         .add(TextEditingController(text: TickTitleList.last.detail));
+
+    setState(() {});
   }
 
   _MyHomePageState() {
@@ -98,28 +100,28 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: TickTitleList.length,
         itemBuilder: (context, index) {
           return Card(
-              child: ListTile(
-            title: TextField(
-              controller: _titleControllers[index],
-              decoration: InputDecoration(labelText: 'Title'),
-              onChanged: (value) {
-                TickTitleList[index].title = value;
-              },
+            child: ListTile(
+              title: TextField(
+                controller: _titleControllers[index],
+                decoration: InputDecoration(labelText: 'Title'),
+                onChanged: (value) {
+                  TickTitleList[index].title = value;
+                },
+              ),
+              subtitle: TextField(
+                controller: _detailControllers[index],
+                decoration: InputDecoration(labelText: 'detail'),
+                onChanged: (value) {
+                  TickTitleList[index].detail = value;
+                },
+              ),
             ),
-            subtitle: TextField(
-              controller: _detailControllers[index],
-              decoration: InputDecoration(labelText: 'detail'),
-              onChanged: (value) {
-                TickTitleList[index].detail = value;
-              },
-            ),
-          ));
+          );
         },
       )),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             _addTickTile();
-            setState(() {});
           },
           tooltip: 'Increment',
           child: const Icon(Icons.add)),
