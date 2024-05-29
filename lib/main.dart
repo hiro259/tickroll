@@ -48,13 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //実際の空データの追加
     TickTitleList.add(TickTitle(title: "", detail: ""));
 
-    //Title用Textfiledの文字列変更用のcontrollerの追加
-    _titleControllers
-        .add(TextEditingController(text: TickTitleList.last.title));
-    //detail用Textfiledの文字列変更用のcontrollerの追加
-    _detailControllers
-        .add(TextEditingController(text: TickTitleList.last.detail));
-
     setState(() {});
   }
 
@@ -65,17 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
     TickTitleList.add(TickTitle(title: '夜リスト', detail: '寝る前にやること'));
   }
 
-  final _titleControllers = <TextEditingController>[];
-  final _detailControllers = <TextEditingController>[];
-
   @override
   void initState() {
     super.initState();
     // TextEditingControllerの初期化
-    for (final item in TickTitleList) {
-      _titleControllers.add(TextEditingController(text: item.title));
-      _detailControllers.add(TextEditingController(text: item.detail));
-    }
   }
 
   @override
@@ -101,21 +87,18 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
-              title: TextField(
-                controller: _titleControllers[index],
-                decoration: InputDecoration(labelText: 'Title'),
-                onChanged: (value) {
-                  TickTitleList[index].title = value;
-                },
-              ),
-              subtitle: TextField(
-                controller: _detailControllers[index],
-                decoration: InputDecoration(labelText: 'detail'),
-                onChanged: (value) {
-                  TickTitleList[index].detail = value;
-                },
+              title: Text(TickTitleList[index].title),
+              subtitle: Text(TickTitleList[index].detail),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+                ],
               ),
             ),
+            // Icon(Icons.book),
+            // Icon(Icons.co2),
           );
         },
       )),
