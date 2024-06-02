@@ -32,6 +32,85 @@ class TickTitle {
   });
 }
 
+class EditItemDialog extends StatefulWidget {
+  final String initialTitle;
+  final String initialDetail;
+  final Function(String, String) onSave;
+
+  const EditItemDialog({
+    super.key,
+    required this.initialTitle,
+    required this.initialDetail,
+    required this.onSave,
+  });
+
+  @override
+  _EditItemDialogState createState() => _EditItemDialogState();
+}
+
+class _EditItemDialogState extends State<EditItemDialog> {
+  late TextEditingController _titleController;
+  late TextEditingController _detailController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.initialTitle);
+    _detailController = TextEditingController(text: widget.initialDetail);
+  }
+
+  @override
+  //メモリ管理用らしい
+  void dispose() {
+    _titleController.dispose();
+    _detailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Edit Item'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _titleController,
+            decoration: const InputDecoration(
+              labelText: 'Title',
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          TextField(
+            controller: _detailController,
+            decoration: const InputDecoration(
+              labelText: 'Detail',
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            widget.onSave(
+              _titleController.text,
+              _detailController.text,
+            );
+            Navigator.of(context).pop();
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -46,9 +125,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _addTickTile() {
     //実際の空データの追加
-    TickTitleList.add(TickTitle(title: "", detail: ""));
+    setState(() {
+      TickTitleList.add(TickTitle(title: "", detail: ""));
+    });
 
-    setState(() {});
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return EditItemDialog(
+              initialTitle: TickTitleList.last.title,
+              initialDetail: TickTitleList.last.detail,
+              onSave: (title, detail) {
+                setState(() {
+                  TickTitleList.last.title = title;
+                  TickTitleList.last.detail = detail;
+                });
+              });
+        });
   }
 
   _MyHomePageState() {
@@ -92,8 +185,55 @@ class _MyHomePageState extends State<MyHomePage> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+                  IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return EditItemDialog(
+                                  initialTitle: TickTitleList[index].title,
+                                  initialDetail: TickTitleList[index].detail,
+                                  onSave: (title, detail) {
+                                    setState(() {
+                                      TickTitleList[index].title = title;
+                                      TickTitleList[index].detail = detail;
+                                    });
+                                  });
+                            });
+                      },
+                      icon: Icon(Icons.edit)),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Delete Confirmation'),
+                            content: const Text(
+                                'Are you sure you want to delete this item?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // ダイアログを閉じる
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    TickTitleList.removeAt(index);
+                                  });
+                                  Navigator.of(context).pop(); // ダイアログを閉じる
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: Icon(Icons.delete),
+                  )
                 ],
               ),
             ),
