@@ -25,90 +25,19 @@ class MyApp extends StatelessWidget {
 class TickTitle {
   String title;
   String detail;
+  bool istitleEditing;
+  bool isdetailEditing;
+  TextEditingController titleController;
+  TextEditingController detailController;
 
   TickTitle({
     required this.title,
     required this.detail,
+    required this.istitleEditing,
+    required this.isdetailEditing,
+    required this.titleController,
+    required this.detailController,
   });
-}
-
-class EditItemDialog extends StatefulWidget {
-  final String initialTitle;
-  final String initialDetail;
-  final Function(String, String) onSave;
-
-  const EditItemDialog({
-    super.key,
-    required this.initialTitle,
-    required this.initialDetail,
-    required this.onSave,
-  });
-
-  @override
-  _EditItemDialogState createState() => _EditItemDialogState();
-}
-
-class _EditItemDialogState extends State<EditItemDialog> {
-  late TextEditingController _titleController;
-  late TextEditingController _detailController;
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController = TextEditingController(text: widget.initialTitle);
-    _detailController = TextEditingController(text: widget.initialDetail);
-  }
-
-  @override
-  //メモリ管理用らしい
-  void dispose() {
-    _titleController.dispose();
-    _detailController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Edit Item'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(
-              labelText: 'Title',
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          TextField(
-            controller: _detailController,
-            decoration: const InputDecoration(
-              labelText: 'Detail',
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            widget.onSave(
-              _titleController.text,
-              _detailController.text,
-            );
-            Navigator.of(context).pop();
-          },
-          child: const Text('Save'),
-        ),
-      ],
-    );
-  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -123,32 +52,53 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<TickTitle> TickTitleList = [];
 
+  void EdidingTextfieldfalse() {
+    TickTitleList.forEach((item) {
+      item.istitleEditing = false;
+    });
+    TickTitleList.forEach((item) {
+      item.isdetailEditing = false;
+    });
+  }
+
   _addTickTile() {
     //実際の空データの追加
     setState(() {
-      TickTitleList.add(TickTitle(title: "", detail: ""));
+      TickTitleList.add(TickTitle(
+          title: "　　　　　　　",
+          detail: "　　　　　　　",
+          istitleEditing: false,
+          isdetailEditing: false,
+          titleController: TextEditingController(text: "　　　　　　　"),
+          detailController: TextEditingController(text: "　　　　　　　")));
     });
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return EditItemDialog(
-              initialTitle: TickTitleList.last.title,
-              initialDetail: TickTitleList.last.detail,
-              onSave: (title, detail) {
-                setState(() {
-                  TickTitleList.last.title = title;
-                  TickTitleList.last.detail = detail;
-                });
-              });
-        });
   }
 
   _MyHomePageState() {
     print('MyHomePageState Start');
-    TickTitleList.add(TickTitle(title: '朝リスト', detail: '起きてやること'));
-    TickTitleList.add(TickTitle(title: '昼リスト', detail: 'ランチ後にやること'));
-    TickTitleList.add(TickTitle(title: '夜リスト', detail: '寝る前にやること'));
+    TickTitleList.add(TickTitle(
+        title: '朝リスト',
+        detail: '起きてやること',
+        istitleEditing: false,
+        isdetailEditing: false,
+        titleController: TextEditingController(text: "朝リスト"),
+        detailController: TextEditingController(text: "起きてやること")));
+
+    TickTitleList.add(TickTitle(
+        title: '昼リスト',
+        detail: 'ランチ後にやること',
+        istitleEditing: false,
+        isdetailEditing: false,
+        titleController: TextEditingController(text: "昼リスト"),
+        detailController: TextEditingController(text: "ランチ後にやること")));
+
+    TickTitleList.add(TickTitle(
+        title: '夜リスト',
+        detail: '寝る前にやること',
+        istitleEditing: false,
+        isdetailEditing: false,
+        titleController: TextEditingController(text: "夜リスト"),
+        detailController: TextEditingController(text: "寝る前にやること")));
   }
 
   @override
@@ -163,16 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TickRoll()),
-                );
-              },
-              child: Text('TickRoll')),
-        ],
+        actions: [],
       ),
       body: Center(
           child: ListView.builder(
@@ -180,28 +121,59 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
-              title: Text(TickTitleList[index].title),
-              subtitle: Text(TickTitleList[index].detail),
+              title: TickTitleList[index].istitleEditing
+                  ? TextFormField(
+                      controller: TickTitleList[index].titleController,
+                      onFieldSubmitted: (newTitle) {
+                        setState(() {
+                          TickTitleList[index].istitleEditing = false;
+                        });
+                        TickTitleList[index].title = newTitle;
+                      },
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          EdidingTextfieldfalse();
+                          TickTitleList[index].istitleEditing = true;
+                        });
+                      },
+                      child: Text(TickTitleList[index].title,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+              subtitle: TickTitleList[index].isdetailEditing
+                  ? TextFormField(
+                      controller: TickTitleList[index].detailController,
+                      onFieldSubmitted: (newDetail) {
+                        setState(() {
+                          TickTitleList[index].isdetailEditing = false;
+                        });
+                        TickTitleList[index].detail = newDetail;
+                      },
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          EdidingTextfieldfalse();
+                          TickTitleList[index].isdetailEditing = true;
+                        });
+                      },
+                      child: Text(
+                        TickTitleList[index].detail,
+                        style:
+                            TextStyle(fontSize: 12), //detailの大きさのも同じだと不自然に見えるため
+                      )),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TickRoll(TickTitleList[index].title)),
+                );
+              },
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return EditItemDialog(
-                                  initialTitle: TickTitleList[index].title,
-                                  initialDetail: TickTitleList[index].detail,
-                                  onSave: (title, detail) {
-                                    setState(() {
-                                      TickTitleList[index].title = title;
-                                      TickTitleList[index].detail = detail;
-                                    });
-                                  });
-                            });
-                      },
-                      icon: Icon(Icons.edit)),
                   IconButton(
                     onPressed: () {
                       showDialog(
