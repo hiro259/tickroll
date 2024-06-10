@@ -65,12 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
     //実際の空データの追加
     setState(() {
       TickTitleList.add(TickTitle(
-          title: "　　　　　　　",
-          detail: "　　　　　　　",
+          title: "",
+          detail: "",
           istitleEditing: false,
           isdetailEditing: false,
-          titleController: TextEditingController(text: "　　　　　　　"),
-          detailController: TextEditingController(text: "　　　　　　　")));
+          titleController: TextEditingController(text: ""),
+          detailController: TextEditingController(text: "")));
     });
   }
 
@@ -131,15 +131,25 @@ class _MyHomePageState extends State<MyHomePage> {
                         TickTitleList[index].title = newTitle;
                       },
                     )
-                  : GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          EdidingTextfieldfalse();
-                          TickTitleList[index].istitleEditing = true;
-                        });
-                      },
-                      child: Text(TickTitleList[index].title,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                  : Align(
+                      alignment: Alignment.centerLeft, // 左寄せに設定
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0), // クリック範囲を狭める
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              EdidingTextfieldfalse();
+                              TickTitleList[index].istitleEditing = true;
+                            });
+                          },
+                          child: Text(TickTitleList[index].title,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.black)),
+                        ),
+                      ),
                     ),
               subtitle: TickTitleList[index].isdetailEditing
                   ? TextFormField(
@@ -151,18 +161,25 @@ class _MyHomePageState extends State<MyHomePage> {
                         TickTitleList[index].detail = newDetail;
                       },
                     )
-                  : GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          EdidingTextfieldfalse();
-                          TickTitleList[index].isdetailEditing = true;
-                        });
-                      },
-                      child: Text(
-                        TickTitleList[index].detail,
-                        style:
-                            TextStyle(fontSize: 12), //detailの大きさのも同じだと不自然に見えるため
-                      )),
+                  : Align(
+                      alignment: Alignment.centerLeft, // 左寄せに設定
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0), // クリック範囲を狭める
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              EdidingTextfieldfalse();
+                              TickTitleList[index].isdetailEditing = true;
+                            });
+                          },
+                          child: Text(
+                            TickTitleList[index].detail,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ),
               onTap: () {
                 Navigator.push(
                   context,
