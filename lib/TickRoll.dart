@@ -129,6 +129,7 @@ class _TickRoll extends State<TickRoll> {
         itemCount: TickDataList.length,
         itemBuilder: (context, index) {
           return GestureDetector(
+<<<<<<< HEAD
             child: Card(
               child: SwitchListTile(
                 title: TickDataList[index].istitleEditing
@@ -158,6 +159,66 @@ class _TickRoll extends State<TickRoll> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                     color: Colors.black)),
+=======
+            child: SwitchListTile(
+              title: TickDataList[index].istitleEditing
+                  ? TextFormField(
+                      controller: TickDataList[index].titleController,
+                      onFieldSubmitted: (newTitle) {
+                        setState(() {
+                          TickDataList[index].istitleEditing = false;
+                        });
+                        TickDataList[index].title = newTitle;
+                      },
+                    )
+                  : Align(
+                      alignment: Alignment.centerLeft, // 左寄せに設定
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0), // クリック範囲を狭める
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              EdidingTextfieldfalse();
+                              TickDataList[index].istitleEditing = true;
+                            });
+                          },
+                          child: Text(TickDataList[index].title,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.black)),
+                        ),
+                      ),
+                    ),
+              subtitle: TickDataList[index].isdetailEditing
+                  ? TextFormField(
+                      style:
+                          TextStyle(fontSize: 12), //detailの大きさのも同じだと不自然に見えるため
+                      controller: TickDataList[index].detailController,
+                      onFieldSubmitted: (newdetail) {
+                        setState(() {
+                          TickDataList[index].isdetailEditing = false;
+                        });
+                        TickDataList[index].detail = newdetail;
+                      },
+                    )
+                  : Align(
+                      alignment: Alignment.centerLeft, // 左寄せに設定
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0), // クリック範囲を狭める
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              EdidingTextfieldfalse();
+                              TickDataList[index].isdetailEditing = true;
+                            });
+                          },
+                          child: Text(
+                            TickDataList[index].detail,
+                            style: TextStyle(fontSize: 12),
+>>>>>>> cd955af5d3e7fad44186f8bbbf7a099d16a3641d
                           ),
                         ),
                       ),
