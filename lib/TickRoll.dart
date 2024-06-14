@@ -125,87 +125,96 @@ class _TickRoll extends State<TickRoll> {
         ],
       ),
       body: Center(
-          child: ListView.builder(
-        itemCount: TickDataList.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            child: Card(
-              child: SwitchListTile(
-                title: TickDataList[index].istitleEditing
-                    ? TextFormField(
-                        controller: TickDataList[index].titleController,
-                        onFieldSubmitted: (newTitle) {
-                          setState(() {
-                            TickDataList[index].istitleEditing = false;
-                          });
-                          TickDataList[index].title = newTitle;
-                        },
-                      )
-                    : Align(
-                        alignment: Alignment.centerLeft, // 左寄せに設定
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0), // クリック範囲を狭める
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                EdidingTextfieldfalse();
-                                TickDataList[index].istitleEditing = true;
-                              });
-                            },
-                            child: Text(TickDataList[index].title,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Colors.black)),
-                          ),
-                        ),
-                      ),
-                // secondary: ,
-                value: TickDataList[index].value,
-                onChanged: (bool newValue) {
-                  setState(() {
-                    EdidingTextfieldfalse();
-                    TickDataList[index].value = newValue;
-                  });
-                },
-              ),
-            ),
-            onLongPress: () {
-              setState(() {
-                EdidingTextfieldfalse();
-              });
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Delete Confirmation'),
-                    content: const Text(
-                        'Are you sure you want to delete this item?'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); // ダイアログを閉じる
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            TickDataList.removeAt(index);
-                          });
-                          Navigator.of(context).pop(); // ダイアログを閉じる
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          );
-        },
-      )),
+          child: ReorderableListView.builder(
+              itemCount: TickDataList.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  key: Key('item_$index'),
+                  child: Card(
+                    child: SwitchListTile(
+                      title: TickDataList[index].istitleEditing
+                          ? TextFormField(
+                              controller: TickDataList[index].titleController,
+                              onFieldSubmitted: (newTitle) {
+                                setState(() {
+                                  TickDataList[index].istitleEditing = false;
+                                });
+                                TickDataList[index].title = newTitle;
+                              },
+                            )
+                          : Align(
+                              alignment: Alignment.centerLeft, // 左寄せに設定
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8.0), // クリック範囲を狭める
+                                child: TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      EdidingTextfieldfalse();
+                                      TickDataList[index].istitleEditing = true;
+                                    });
+                                  },
+                                  child: Text(TickDataList[index].title,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.black)),
+                                ),
+                              ),
+                            ),
+                      // secondary: ,
+                      value: TickDataList[index].value,
+                      onChanged: (bool newValue) {
+                        setState(() {
+                          EdidingTextfieldfalse();
+                          TickDataList[index].value = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                  onLongPress: () {
+                    setState(() {
+                      EdidingTextfieldfalse();
+                    });
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Delete Confirmation'),
+                          content: const Text(
+                              'Are you sure you want to delete this item?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // ダイアログを閉じる
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  TickDataList.removeAt(index);
+                                });
+                                Navigator.of(context).pop(); // ダイアログを閉じる
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = TickDataList.removeAt(oldIndex);
+                  TickDataList.insert(newIndex, item);
+                });
+              })),
     );
   }
 }
