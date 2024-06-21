@@ -52,7 +52,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<TickTitle> TickTitleList = [];
 
-  void EdidingTextfieldfalse() {
+  void EdidingTextfgeldfalse() {
     TickTitleList.forEach((item) {
       item.istitleEditing = false;
     });
@@ -118,116 +118,118 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ReorderableListView.builder(
           itemCount: TickTitleList.length,
           itemBuilder: (context, index) {
-            return Card(
+            return SizedBox(
               key: Key('item $index'),
-              child: ListTile(
-                title: TickTitleList[index].istitleEditing
-                    ? TextFormField(
-                        controller: TickTitleList[index].titleController,
-                        onFieldSubmitted: (newTitle) {
-                          setState(() {
-                            TickTitleList[index].istitleEditing = false;
-                          });
-                          TickTitleList[index].title = newTitle;
-                        },
-                      )
-                    : Align(
-                        alignment: Alignment.centerLeft, // 左寄せに設定
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0), // クリック範囲を狭める
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                EdidingTextfieldfalse();
-                                TickTitleList[index].istitleEditing = true;
-                              });
-                            },
-                            child: Text(TickTitleList[index].title,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Colors.black)),
-                          ),
-                        ),
-                      ),
-                subtitle: TickTitleList[index].isdetailEditing
-                    ? TextFormField(
-                        controller: TickTitleList[index].detailController,
-                        onFieldSubmitted: (newDetail) {
-                          setState(() {
-                            TickTitleList[index].isdetailEditing = false;
-                          });
-                          TickTitleList[index].detail = newDetail;
-                        },
-                      )
-                    : Align(
-                        alignment: Alignment.centerLeft, // 左寄せに設定
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0), // クリック範囲を狭める
-                          child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                EdidingTextfieldfalse();
-                                TickTitleList[index].isdetailEditing = true;
-                              });
-                            },
-                            child: Text(
-                              TickTitleList[index].detail,
-                              style: TextStyle(fontSize: 12),
+              child: Card(
+                child: ListTile(
+                  title: TickTitleList[index].istitleEditing
+                      ? TextFormField(
+                          controller: TickTitleList[index].titleController,
+                          onFieldSubmitted: (newTitle) {
+                            setState(() {
+                              TickTitleList[index].istitleEditing = false;
+                            });
+                            TickTitleList[index].title = newTitle;
+                          },
+                        )
+                      : Align(
+                          alignment: Alignment.centerLeft, // 左寄せに設定
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.0), // クリック範囲を狭める
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  EdidingTextfgeldfalse();
+                                  TickTitleList[index].istitleEditing = true;
+                                });
+                              },
+                              child: Text(TickTitleList[index].title,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black)),
                             ),
                           ),
                         ),
-                      ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            TickRoll(TickTitleList[index].title)),
-                  );
-                },
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Delete Confirmation'),
-                              content: const Text(
-                                  'Are you sure you want to delete this item?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // ダイアログを閉じる
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      TickTitleList.removeAt(index);
-                                    });
-                                    Navigator.of(context).pop(); // ダイアログを閉じる
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
+                  subtitle: TickTitleList[index].isdetailEditing
+                      ? TextFormField(
+                          controller: TickTitleList[index].detailController,
+                          onFieldSubmitted: (newDetail) {
+                            setState(() {
+                              TickTitleList[index].isdetailEditing = false;
+                            });
+                            TickTitleList[index].detail = newDetail;
                           },
-                        );
-                      },
-                      icon: Icon(Icons.delete),
-                    )
-                  ],
+                        )
+                      : Align(
+                          alignment: Alignment.centerLeft, // 左寄せに設定
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.0), // クリック範囲を狭める
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  EdidingTextfgeldfalse();
+                                  TickTitleList[index].isdetailEditing = true;
+                                });
+                              },
+                              child: Text(
+                                TickTitleList[index].detail,
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ),
+                        ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TickRoll(TickTitleList[index].title)),
+                    );
+                  },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Delete Confirmation'),
+                                content: const Text(
+                                    'Are you sure you want to delete this item?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // ダイアログを閉じる
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        TickTitleList.removeAt(index);
+                                      });
+                                      Navigator.of(context).pop(); // ダイアログを閉じる
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.delete),
+                      )
+                    ],
+                  ),
                 ),
+                // Icon(Icons.book),
+                // Icon(Icons.co2),
               ),
-              // Icon(Icons.book),
-              // Icon(Icons.co2),
             );
           },
           onReorder: (oldIndex, newIndex) {

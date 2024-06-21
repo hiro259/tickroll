@@ -161,6 +161,8 @@ class _TickRoll extends State<TickRoll> {
                             ),
                           ),
                         ),
+                  // title: Text(TickDataList[index].title),
+
                   // secondary: ,
                   value: TickDataList[index].value,
                   onChanged: (bool newValue) {
